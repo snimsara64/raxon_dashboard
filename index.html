@@ -13,60 +13,54 @@
         .container { max-width: 1200px; margin: auto; }
         header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2b3139; padding-bottom: 10px; margin-bottom: 15px; }
         .timeframes { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; }
-        .tf-btn { background: #2b3139; border: 1px solid #474d57; color: #848e9c; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .tf-btn { background: #2b3139; border: 1px solid #474d57; color: #848e9c; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; text-transform: uppercase; transition: 0.3s; }
         .tf-btn.active { background: var(--accent); color: black; border-color: var(--accent); font-weight: bold; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
         .stat-card { background: var(--card-bg); padding: 15px; border-radius: 10px; border-bottom: 2px solid var(--accent); }
-        .stat-card h3 { margin: 0; font-size: 11px; color: #848e9c; text-transform: uppercase; }
-        .stat-card p { margin: 5px 0 0; font-size: 18px; font-weight: bold; }
-        .card { background: var(--card-bg); padding: 15px; border-radius: 12px; position: relative; margin-bottom: 15px; }
-        .form-section { background: var(--card-bg); padding: 20px; border-radius: 12px; }
+        .stat-card h3 { margin: 0; font-size: 10px; color: #848e9c; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card p { margin: 5px 0 0; font-size: 16px; font-weight: bold; }
+        .card { background: var(--card-bg); padding: 15px; border-radius: 12px; position: relative; margin-bottom: 15px; border: 1px solid #2b3139; }
+        .form-section { background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid #2b3139; }
         input, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 6px; border: 1px solid #474d57; background: #2b3139; color: white; box-sizing: border-box; }
-        .save-btn { background: var(--accent); color: black; font-weight: bold; cursor: pointer; border: none; }
+        .save-btn { background: var(--accent); color: black; font-weight: bold; cursor: pointer; border: none; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h2 style="margin:0;">RAXON <span style="color:var(--accent)">FINANCE</span></h2>
-        <div style="font-size: 12px; color: var(--accent);">PRO DASHBOARD</div>
+        <h2 style="margin:0; font-size: 20px;">RAXON <span style="color:var(--accent)">FINANCE</span></h2>
+        <div style="font-size: 10px; color: var(--accent); letter-spacing: 1px;">BINANCE PRO ANALYST</div>
     </header>
 
-    <div class="timeframes" id="tf-container">
-        <button class="tf-btn" onclick="changeTF(1, this)">1D</button>
-        <button class="tf-btn" onclick="changeTF(7, this)">1W</button>
-        <button class="tf-btn" onclick="changeTF(14, this)">2W</button>
-        <button class="tf-btn" onclick="changeTF(21, this)">3W</button>
-        <button class="tf-btn active" onclick="changeTF(30, this)">1M</button>
-        <button class="tf-btn" onclick="changeTF(90, this)">3M</button>
-        <button class="tf-btn" onclick="changeTF(180, this)">6M</button>
-        <button class="tf-btn" onclick="changeTF(365, this)">1Y</button>
-        <button class="tf-btn" onclick="changeTF(730, this)">2Y</button>
-        <button class="tf-btn" onclick="changeTF(0, this)">ALL</button>
+    <div class="timeframes">
+        <button class="tf-btn active" onclick="changeTF('1D', this)">Daily</button>
+        <button class="tf-btn" onclick="changeTF('1W', this)">Weekly (Avg)</button>
+        <button class="tf-btn" onclick="changeTF('1M', this)">Monthly (Avg)</button>
+        <button class="tf-btn" onclick="changeTF('ALL', this)">All Records</button>
     </div>
 
     <div class="stats-grid">
-        <div class="stat-card"><h3>Wallet</h3><p id="s-wallet">Rs. 0</p></div>
-        <div class="stat-card"><h3>Daily P&L</h3><p id="s-income">Rs. 0</p></div>
-        <div class="stat-card"><h3>Records</h3><p id="s-days">0 Days</p></div>
+        <div class="stat-card"><h3>Total Balance</h3><p id="s-wallet">Rs. 0</p></div>
+        <div class="stat-card"><h3>Last P&L</h3><p id="s-income">Rs. 0</p></div>
+        <div class="stat-card"><h3>Data points</h3><p id="s-days">0 Days</p></div>
     </div>
 
     <div class="card">
-        <h4 style="margin:0 0 10px; color:#848e9c">Wallet Equity Curve</h4>
+        <h4 style="margin:0 0 10px; color:#848e9c; font-size: 12px;">WALLET EQUITY (AVERAGE)</h4>
         <canvas id="walletChart"></canvas>
     </div>
     <div class="card">
-        <h4 style="margin:0 0 10px; color:#848e9c">Daily Income / Loss</h4>
+        <h4 style="margin:0 0 10px; color:#848e9c; font-size: 12px;">P&L DISTRIBUTION</h4>
         <canvas id="incomeChart"></canvas>
     </div>
 
     <div class="form-section">
-        <h3 style="margin:0 0 15px;">Add New Record</h3>
+        <h3 style="margin:0 0 10px; font-size: 16px;">New Entry</h3>
         <input type="date" id="d-date">
         <input type="number" id="d-open" placeholder="Open Balance">
-        <input type="number" id="d-close" placeholder="Income (Use - for Loss)">
-        <input type="number" id="d-wallet" placeholder="Current Wallet">
+        <input type="number" id="d-close" placeholder="Profit/Loss Amount">
+        <input type="number" id="d-wallet" placeholder="Total Wallet After Trade">
         <button class="save-btn" onclick="submitData()">SAVE TO CLOUD</button>
     </div>
 </div>
@@ -80,38 +74,58 @@
         const res = await fetch(SCRIPT_URL);
         rawData = await res.json();
         if(rawData.length > 0) {
-            // Default view: 1 Month (30 days)
-            changeTF(30, document.querySelector('.tf-btn.active'));
-            
+            changeTF('1D', document.querySelector('.tf-btn.active'));
             const last = rawData[rawData.length - 1];
             document.getElementById('s-wallet').innerText = "Rs. " + last.wallet.toLocaleString();
             document.getElementById('s-income').innerText = "Rs. " + last.close.toLocaleString();
             document.getElementById('s-income').style.color = last.close >= 0 ? "#00c853" : "#ff3b30";
-            document.getElementById('s-days').innerText = rawData.length + " Days";
+            document.getElementById('s-days').innerText = rawData.length;
         }
     }
 
-    function changeTF(days, btn) {
-        // Update button UI
+    function changeTF(mode, btn) {
         document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        // Filter data
-        let filtered = days === 0 ? rawData : rawData.slice(-days);
-        
-        const labels = filtered.map(d => d.date.split('T')[0]);
-        const wallet = filtered.map(d => parseFloat(d.wallet));
-        const income = filtered.map(d => parseFloat(d.close));
+        let processed = processData(mode);
+        updateCharts(processed.labels, processed.wallet, processed.income);
+    }
 
-        updateCharts(labels, wallet, income);
+    function processData(mode) {
+        if(mode === '1D' || mode === 'ALL') {
+            return {
+                labels: rawData.map(d => d.date.split('T')[0]),
+                wallet: rawData.map(d => parseFloat(d.wallet)),
+                income: rawData.map(d => parseFloat(d.close))
+            };
+        }
+
+        let groups = {};
+        rawData.forEach(d => {
+            let date = new Date(d.date);
+            let key;
+            if(mode === '1W') {
+                let first = date.getDate() - date.getDay();
+                key = "Week " + new Date(date.setDate(first)).toISOString().split('T')[0];
+            } else if(mode === '1M') {
+                key = date.toLocaleString('default', { month: 'short', year: 'numeric' });
+            }
+            if(!groups[key]) groups[key] = { wallet: [], income: [] };
+            groups[key].wallet.push(parseFloat(d.wallet));
+            groups[key].income.push(parseFloat(d.close));
+        });
+
+        let labels = Object.keys(groups);
+        return {
+            labels: labels,
+            wallet: labels.map(k => groups[k].wallet.reduce((a,b)=>a+b,0) / groups[k].wallet.length),
+            income: labels.map(k => groups[k].income.reduce((a,b)=>a+b,0) / groups[k].income.length)
+        };
     }
 
     function updateCharts(labels, wallet, income) {
-        const commonOptions = {
-            responsive: true,
-            plugins: { zoom: { zoom: { wheel: {enabled: true}, pinch: {enabled: true}, mode: 'x' }, pan: {enabled: true, mode: 'x'} }, legend: {display: false} },
-            scales: { y: { grid: { color: '#2b3139' } }, x: { grid: { display: false } } }
-        };
+        const zoom = { zoom: { wheel: {enabled: true}, pinch: {enabled: true}, mode: 'x' }, pan: {enabled: true, mode: 'x'} };
+        const scales = { y: { grid: { color: '#2b3139' }, ticks: {color: '#848e9c'} }, x: { grid: { display: false }, ticks: {color: '#848e9c'} } };
 
         if(wChart) wChart.destroy();
         if(iChart) iChart.destroy();
@@ -119,13 +133,13 @@
         wChart = new Chart(document.getElementById('walletChart'), {
             type: 'line',
             data: { labels, datasets: [{ data: wallet, borderColor: '#f0b90b', backgroundColor: 'rgba(240,185,11,0.1)', fill: true, tension: 0.3 }] },
-            options: commonOptions
+            options: { plugins: { zoom, legend: {display: false} }, scales }
         });
 
         iChart = new Chart(document.getElementById('incomeChart'), {
             type: 'bar',
             data: { labels, datasets: [{ data: income, backgroundColor: income.map(v => v >= 0 ? '#00c853' : '#ff3b30') }] },
-            options: commonOptions
+            options: { plugins: { zoom, legend: {display: false} }, scales }
         });
     }
 
@@ -136,9 +150,10 @@
             close: document.getElementById('d-close').value,
             wallet: document.getElementById('d-wallet').value
         };
+        const btn = document.querySelector('.save-btn');
+        btn.innerText = "SAVING..."; btn.disabled = true;
         await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-        alert("Record Saved!");
-        location.reload();
+        alert("Success!"); location.reload();
     }
 
     window.onload = loadData;
