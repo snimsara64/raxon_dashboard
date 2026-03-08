@@ -1,270 +1,148 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAXON FINANCE | Professional Dashboard</title>
+    <title>RAXON FINANCE | Pro Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
     <style>
-        :root {
-            --bg-color: #0b0e11;
-            --card-bg: #1e2329;
-            --accent: #f0b90b;
-            --text-main: #eaecef;
-            --up-color: #00c853;
-            --down-color: #ff3b30;
-        }
-
-        body {
-            background: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Segoe UI', sans-serif;
-            padding: 20px;
-            margin: 0;
-        }
-
-        .container {
-            max-width: 1250px;
-            margin: auto;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #2b3139;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        .logo-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-            .logo-box img {
-                width: 45px;
-                height: 45px;
-                border-radius: 6px;
-                border: 1px solid var(--accent);
-            }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            padding: 18px;
-            border-radius: 12px;
-            border-bottom: 3px solid var(--accent);
-        }
-
-            .stat-card h3 {
-                margin: 0;
-                font-size: 13px;
-                color: #848e9c;
-                text-transform: uppercase;
-            }
-
-            .stat-card p {
-                margin: 10px 0 0;
-                font-size: 22px;
-                font-weight: bold;
-            }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        .form-section {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 20px;
-        }
-
-        input, button {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 6px;
-            border: 1px solid #474d57;
-            background: #2b3139;
-            color: white;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        button {
-            background: var(--accent);
-            color: black;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            transition: 0.2s;
-        }
-
-            button:hover {
-                background: #d9a508;
-            }
-
-        #status-indicator {
-            font-size: 12px;
-            color: var(--accent);
-            letter-spacing: 1px;
-        }
+        :root { --bg-color: #0b0e11; --card-bg: #1e2329; --accent: #f0b90b; --text-main: #eaecef; }
+        body { background: var(--bg-color); color: var(--text-main); font-family: 'Segoe UI', sans-serif; padding: 15px; margin: 0; }
+        .container { max-width: 1200px; margin: auto; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2b3139; padding-bottom: 10px; margin-bottom: 15px; }
+        .timeframes { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; }
+        .tf-btn { background: #2b3139; border: 1px solid #474d57; color: #848e9c; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .tf-btn.active { background: var(--accent); color: black; border-color: var(--accent); font-weight: bold; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .stat-card { background: var(--card-bg); padding: 15px; border-radius: 10px; border-bottom: 2px solid var(--accent); }
+        .stat-card h3 { margin: 0; font-size: 11px; color: #848e9c; text-transform: uppercase; }
+        .stat-card p { margin: 5px 0 0; font-size: 18px; font-weight: bold; }
+        .card { background: var(--card-bg); padding: 15px; border-radius: 12px; position: relative; margin-bottom: 15px; }
+        .form-section { background: var(--card-bg); padding: 20px; border-radius: 12px; }
+        input, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 6px; border: 1px solid #474d57; background: #2b3139; color: white; box-sizing: border-box; }
+        .save-btn { background: var(--accent); color: black; font-weight: bold; cursor: pointer; border: none; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <div class="logo-box">
-                <img src="logo.png" alt="R" onerror="this.src='https://via.placeholder.com/45/f0b90b/000000?text=R'">
-                <h2 style="margin:0; letter-spacing: 1.5px;">RAXON <span style="color:var(--accent)">FINANCE</span></h2>
-            </div>
-            <div id="status-indicator">SYSTEM LIVE</div>
-        </header>
+<div class="container">
+    <header>
+        <h2 style="margin:0;">RAXON <span style="color:var(--accent)">FINANCE</span></h2>
+        <div style="font-size: 12px; color: var(--accent);">PRO DASHBOARD</div>
+    </header>
 
-        <div class="stats-grid">
-            <div class="stat-card"><h3>Total Wallet Balance</h3><p id="s-wallet">Rs. 0.00</p></div>
-            <div class="stat-card"><h3>Last Daily P&L</h3><p id="s-income">Rs. 0.00</p></div>
-            <div class="stat-card"><h3>Growth Period</h3><p id="s-days">0 Days</p></div>
-        </div>
-
-        <div class="charts-grid">
-            <div class="card">
-                <h4 style="margin:0 0 15px; color:#848e9c">Wallet Equity Curve</h4>
-                <canvas id="walletChart"></canvas>
-            </div>
-            <div class="card">
-                <h4 style="margin:0 0 15px; color:#848e9c">Daily Income / Loss (P&L)</h4>
-                <canvas id="incomeChart"></canvas>
-            </div>
-        </div>
-
-        <div class="form-section">
-            <div class="card">
-                <h3 style="margin:0 0 15px;">Add New Record</h3>
-                <label style="font-size:12px; color:#848e9c">Entry Date</label>
-                <input type="date" id="d-date">
-                <input type="number" id="d-open" placeholder="Open Balance (LKR)">
-                <input type="number" id="d-close" placeholder="Daily Income (Use - for Loss)">
-                <input type="number" id="d-wallet" placeholder="Current Total Wallet">
-                <button id="sub-btn" onclick="submitData()">SAVE TO CLOUD</button>
-            </div>
-            <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #848e9c; border: 1px dashed #474d57;">
-                <p>ඔබ ඇතුළත් කරන දත්ත ස්වයංක්‍රීයව Google Sheets සමඟ සමකාලීන (Sync) වේ. <br> පාඩු ලැබූ දින සඳහා අගය ඉදිරියට <b>සෘණ (-) ලකුණ</b> යොදන්න.</p>
-            </div>
-        </div>
+    <div class="timeframes" id="tf-container">
+        <button class="tf-btn" onclick="changeTF(1, this)">1D</button>
+        <button class="tf-btn" onclick="changeTF(7, this)">1W</button>
+        <button class="tf-btn" onclick="changeTF(14, this)">2W</button>
+        <button class="tf-btn" onclick="changeTF(21, this)">3W</button>
+        <button class="tf-btn active" onclick="changeTF(30, this)">1M</button>
+        <button class="tf-btn" onclick="changeTF(90, this)">3M</button>
+        <button class="tf-btn" onclick="changeTF(180, this)">6M</button>
+        <button class="tf-btn" onclick="changeTF(365, this)">1Y</button>
+        <button class="tf-btn" onclick="changeTF(730, this)">2Y</button>
+        <button class="tf-btn" onclick="changeTF(0, this)">ALL</button>
     </div>
 
-    <script>
-        // ඔයා ලබාදුන් Google Web App URL එක
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbysgbdmkZn3v59mJaYSnh4N2mqp2zOQ31CnZPprRPys5Hs9R9N0Z-ilt5VO0xPn0Iznjg/exec";
+    <div class="stats-grid">
+        <div class="stat-card"><h3>Wallet</h3><p id="s-wallet">Rs. 0</p></div>
+        <div class="stat-card"><h3>Daily P&L</h3><p id="s-income">Rs. 0</p></div>
+        <div class="stat-card"><h3>Records</h3><p id="s-days">0 Days</p></div>
+    </div>
 
-        let wChart, iChart;
+    <div class="card">
+        <h4 style="margin:0 0 10px; color:#848e9c">Wallet Equity Curve</h4>
+        <canvas id="walletChart"></canvas>
+    </div>
+    <div class="card">
+        <h4 style="margin:0 0 10px; color:#848e9c">Daily Income / Loss</h4>
+        <canvas id="incomeChart"></canvas>
+    </div>
 
-        async function loadData() {
-            document.getElementById('status-indicator').innerText = "SYNCING...";
-            try {
-                const res = await fetch(SCRIPT_URL);
-                const data = await res.json();
+    <div class="form-section">
+        <h3 style="margin:0 0 15px;">Add New Record</h3>
+        <input type="date" id="d-date">
+        <input type="number" id="d-open" placeholder="Open Balance">
+        <input type="number" id="d-close" placeholder="Income (Use - for Loss)">
+        <input type="number" id="d-wallet" placeholder="Current Wallet">
+        <button class="save-btn" onclick="submitData()">SAVE TO CLOUD</button>
+    </div>
+</div>
 
-                if (data.length > 0) {
-                    const labels = data.map(d => d.date.split('T')[0]);
-                    const wData = data.map(d => parseFloat(d.wallet));
-                    const iData = data.map(d => parseFloat(d.close));
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbysgbdmkZn3v59mJaYSnh4N2mqp2zOQ31CnZPprRPys5Hs9R9N0Z-ilt5VO0xPn0Iznjg/exec";
+    let rawData = [];
+    let wChart, iChart;
 
-                    renderCharts(labels, wData, iData);
-
-                    const last = data[data.length - 1];
-                    document.getElementById('s-wallet').innerText = "Rs. " + last.wallet.toLocaleString();
-
-                    // Income එක Plus ද Minus ද අනුව පාට වෙනස් කිරීම
-                    const incomeElem = document.getElementById('s-income');
-                    incomeElem.innerText = "Rs. " + last.close.toLocaleString();
-                    incomeElem.style.color = last.close >= 0 ? "#00c853" : "#ff3b30";
-
-                    document.getElementById('s-days').innerText = data.length + " Days Recorded";
-                    document.getElementById('status-indicator').innerText = "CONNECTED";
-                }
-            } catch (err) {
-                document.getElementById('status-indicator').innerText = "OFFLINE";
-            }
+    async function loadData() {
+        const res = await fetch(SCRIPT_URL);
+        rawData = await res.json();
+        if(rawData.length > 0) {
+            // Default view: 1 Month (30 days)
+            changeTF(30, document.querySelector('.tf-btn.active'));
+            
+            const last = rawData[rawData.length - 1];
+            document.getElementById('s-wallet').innerText = "Rs. " + last.wallet.toLocaleString();
+            document.getElementById('s-income').innerText = "Rs. " + last.close.toLocaleString();
+            document.getElementById('s-income').style.color = last.close >= 0 ? "#00c853" : "#ff3b30";
+            document.getElementById('s-days').innerText = rawData.length + " Days";
         }
+    }
 
-        function renderCharts(labels, wData, iData) {
-            const chartOptions = {
-                responsive: true,
-                scales: { y: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } }, x: { ticks: { color: '#848e9c' } } },
-                plugins: { legend: { display: false } }
-            };
+    function changeTF(days, btn) {
+        // Update button UI
+        document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-            if (wChart) wChart.destroy();
-            if (iChart) iChart.destroy();
+        // Filter data
+        let filtered = days === 0 ? rawData : rawData.slice(-days);
+        
+        const labels = filtered.map(d => d.date.split('T')[0]);
+        const wallet = filtered.map(d => parseFloat(d.wallet));
+        const income = filtered.map(d => parseFloat(d.close));
 
-            // Wallet Line Chart
-            wChart = new Chart(document.getElementById('walletChart'), {
-                type: 'line',
-                data: { labels, datasets: [{ data: wData, borderColor: '#f0b90b', fill: true, backgroundColor: 'rgba(240,185,11,0.05)', tension: 0.3, pointRadius: 4 }] },
-                options: chartOptions
-            });
+        updateCharts(labels, wallet, income);
+    }
 
-            // Income Bar Chart (පාට මාරු කිරීම සමඟ)
-            iChart = new Chart(document.getElementById('incomeChart'), {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        data: iData,
-                        backgroundColor: iData.map(v => v >= 0 ? '#00c853' : '#ff3b30'),
-                        borderRadius: 4
-                    }]
-                },
-                options: chartOptions
-            });
-        }
+    function updateCharts(labels, wallet, income) {
+        const commonOptions = {
+            responsive: true,
+            plugins: { zoom: { zoom: { wheel: {enabled: true}, pinch: {enabled: true}, mode: 'x' }, pan: {enabled: true, mode: 'x'} }, legend: {display: false} },
+            scales: { y: { grid: { color: '#2b3139' } }, x: { grid: { display: false } } }
+        };
 
-        async function submitData() {
-            const btn = document.getElementById('sub-btn');
-            const payload = {
-                date: document.getElementById('d-date').value,
-                open: document.getElementById('d-open').value,
-                close: document.getElementById('d-close').value,
-                wallet: document.getElementById('d-wallet').value
-            };
+        if(wChart) wChart.destroy();
+        if(iChart) iChart.destroy();
 
-            if (!payload.date || !payload.wallet || !payload.close) return alert("අවශ්‍ය සියලුම දත්ත ඇතුළත් කරන්න!");
+        wChart = new Chart(document.getElementById('walletChart'), {
+            type: 'line',
+            data: { labels, datasets: [{ data: wallet, borderColor: '#f0b90b', backgroundColor: 'rgba(240,185,11,0.1)', fill: true, tension: 0.3 }] },
+            options: commonOptions
+        });
 
-            btn.disabled = true; btn.innerText = "UPLOADING...";
+        iChart = new Chart(document.getElementById('incomeChart'), {
+            type: 'bar',
+            data: { labels, datasets: [{ data: income, backgroundColor: income.map(v => v >= 0 ? '#00c853' : '#ff3b30') }] },
+            options: commonOptions
+        });
+    }
 
-            try {
-                await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-                alert("Record Saved Successfully!");
-                location.reload();
-            } catch (e) {
-                alert("Error: Cloud Connection Failed.");
-                btn.disabled = false; btn.innerText = "SAVE TO CLOUD";
-            }
-        }
+    async function submitData() {
+        const payload = {
+            date: document.getElementById('d-date').value,
+            open: document.getElementById('d-open').value,
+            close: document.getElementById('d-close').value,
+            wallet: document.getElementById('d-wallet').value
+        };
+        await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+        alert("Record Saved!");
+        location.reload();
+    }
 
-        window.onload = loadData;
-    </script>
+    window.onload = loadData;
+</script>
 </body>
-
 </html>
+
